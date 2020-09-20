@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width,initial-scale=1">
+
+    <title>🍕 Pizza Pie Calculator 🍕</title>
+
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" type="text/css" href="static/css/uikit.min.css">
+
+    <!-- UIkit JS -->
+    <script src="static/js/uikit.min.js"></script>
+    <script src="static/js/uikit-icons.min.js"></script>
+
+<style>
+  body{
+    margin:30px;
+  }
+ .pizza_img {
+    width:450px;
+    position:absolute;
+    top:30px;
+    left:30px;
+    z-index: -1;
+ }
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;  
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+.page-stuff {
+    width:50%;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; 
+  background: #1e87f0;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #1e87f0;
+  cursor: pointer;
+}
+.page-1 {
+  display: flex;
+  justify-content:space-between;
+}
+#slide-container {
+    padding:10px;
+}
+#pizza-container {
+    max-width:500px;
+    width:40%;
+}
+#ruler {
+    margin-top:400px;
+    width:100%;
+}
+.salami{
+  position:absolute;
+}
+.text_input {
+  padding-bottom:10px; 
+  padding-top:10px; 
+  padding-left:4px;
+  padding-right:4px;
+  font-size:22px; 
+  width:75px;
+  text-align: center;
+}
+.stat{
+  width:25%;
+  text-align: center;
+}
+#save {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.table_row div {
+  width: 20%;
+}
+.table_row {
+  border-bottom: 1px #ddd solid; 
+  display: flex; 
+  justify-content:space-between; 
+  font-size:12px;
+}
+#table_header {
+  border-bottom: 1px black solid; 
+}
+#clear {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: none;
+}
+.stats_page {
+  display: flex; 
+  justify-content:space-around; 
+  margin:20px;
+}
+.chain_btn {
+  max-width: 300px;
+}
+.logo_header {
+  width:100px;
+}
+.chain_cell {
+  margin:5px;
+}
+
+</style>
+</head>
+    <body>
+        <div class="page-1">
+            <div id="pizza-container">
+                <img src="static/img/ruler.png" id="ruler"/>
+                <img src="static/img/crust.png" class="pizza_img" id="crust"/>
+                <img src="static/img/cheese.png" class="pizza_img" id="cheese"/>
+                <div class="pizza_img" id="salamis">
+                  <img src="static/img/salami.png" id="salami">
+                </div>
+            </div>
+
+            <div class="page-stuff">
+                <div id="slide-container">
+                    <h3>Pizza Size: <input type="text" id="size" class="text_input" value="14"/> inches</h3>
+                    <input type="range" min="4" max="25" value="14" class="slider" id="size_slider">
+
+                    <h3>Crust Width: <input type="text" id="crust_width" class="text_input" value="0.5"/> inches</h3>
+                    <input type="range" min="1" max="20" value="5" class="slider" id="crust_slider">
+
+                    <h3>Cost: &nbsp;$<input type="text" id="dollars" class="text_input" value="10.99"/></h3>
+                    <input type="range" min="1" max="50" value="10" class="slider" id="dollars_slider">
+
+                    <button class="uk-button uk-button-primary" type="button" id="save">SAVE</button>
+                    <button class="uk-button uk-button-default" type="button" id="clear">CLEAR</button>
+
+
+                    <div class="table_row" id="table_header">
+                        <div class="row">Size</div>
+                        <div class="row">Crust</div>
+                        <div class="row">Area (in²)</div>
+                        <div class="row">Value ($/in²)</div>
+                        <div class="row">Sans Crust ($/in²)</div>
+                    </div>
+                    <div id=table_rows></div>
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="stats_page">
+          <div class="stat">
+            <h2 id="total_inches">255</h2> 
+            Square Inches of Pizza
+          </div>
+          <div class="stat">
+            <h2 id="square_inch_price">20.00</h2> 
+            Per Square Inch Total
+          </div>
+          <div class="stat">
+            <h2 id="crust_ratio">10%</h2> 
+            Crust to Pizza Ratio
+          </div>
+          <div class="stat">
+            <h2>Don't Eat Crust?</h2> 
+            <b><span id="crustless_total">240</span> in²</b> of crustless pizza at 
+            <b><span id="crustless_price">$22</span> / in²</b>. 
+          </div>
+        </div>
+        <hr style="margin-left:60px; margin-right:60px;"/>
+        <div id="popular_chains">
+            <div class="uk-alert-warning" uk-alert style="font-size:12px;">
+              <a class="uk-alert-close" uk-close></a>
+              Note : All prices listed are for regular priced two-topping pizzas, with no specials or promos applied. Please don't ever pay $17 for a large Dominos pizza! There are always multiple <i>specials</i> happening to bring the price down to at least 50% of regular prices.
+            </div>
+          <div style="display: flex; justify-content:left; flex-wrap:wrap; align-items: center;">
+            <div class="chain_cell"><img src="static/img/dominos_logo_2.png" id="dominos" class="logo_header"/></div>
+            <div class="chain_cell"><button class="uk-button uk-button-default" type="button" onclick="prefill(10, 0.9, 12.1)">SMALL</button></div>
+            <div class="chain_cell"><button class="uk-button uk-button-default" type="button" onclick="prefill(12, 0.9, 14.5)">MEDIUM</button></div>
+            <div class="chain_cell"><button class="uk-button uk-button-default" type="button" onclick="prefill(14, 0.9, 16.8)">LARGE</button></div>
+            <div class="chain_cell"><button class="uk-button uk-button-default" type="button" onclick="prefill(16, 0.9, 19.3)">X-LARGE</button></div>
+          </div>
+
+          <div style="display: flex; justify-content:left; flex-wrap:wrap; align-items: center; margin-top: 20px">
+            <div class="chain_cell"><img src="static/img/papa_johns_logo.png" id="papa_johns" class="logo_header"/></div>
+            <div class="chain_cell"><button class="uk-button uk-button-default" type="button" onclick="prefill(10, 0.9, 12.0)">SMALL</button></div>
+            <div class="chain_cell"><button class="uk-button uk-button-default" type="button" onclick="prefill(12, 0.9, 14.5)">MEDIUM</button></div>
+            <div class="chain_cell"><button class="uk-button uk-button-default" type="button" onclick="prefill(14, 0.9, 17.0)">LARGE</button></div>
+            <div class="chain_cell"><button class="uk-button uk-button-default" type="button" onclick="prefill(16, 0.9, 19.5)">X-LARGE</button></div>
+          </div>
+
+
+          <div style="display: flex; justify-content:left; flex-wrap:wrap; align-items: center; margin-top: 20px">
+            <div class="chain_cell"><img src="static/img/pizza_hut_logo.png" id="papa_johns" class="logo_header"/></div>
+            <div class="chain_cell"><button class="uk-button uk-button-default" type="button" onclick="prefill(12, 0.9, 14.0)">MEDIUM</button></div>
+            <div class="chain_cell"><button class="uk-button uk-button-default" type="button" onclick="prefill(14, 0.9, 16.5)">LARGE</button></div>
+          </div>
+
+        </div>
+    </body>
+</html>
+
+<script>
+
+var pizza_crust = 1;
+var pizza_size = 14;
+var pizza_cost = 12;
+
+var size_slider = document.getElementById("size_slider");
+var size_text = document.getElementById("size");
+size_text.value = size_slider.value; // Display the default slider value
+
+var crust_width = document.getElementById("crust_width");
+var crust_slider = document.getElementById("crust_slider");
+crust_width.value = crust_slider.value / 10;
+
+var dollar_text = document.getElementById("dollars");
+var dollar_slider = document.getElementById("dollars_slider");
+dollar_text.value = dollar_slider.value;
+
+function prefill(size, crust, dollars) {
+  pizza_size = size;
+  pizza_crust = crust;
+  pizza_cost = dollars;
+  size_slider.value = size;
+  crust_slider.value = crust;
+  dollar_slider.value = dollars;
+  size_text.value = size;
+  crust_width.value = crust;
+  dollar_text.value = dollars;
+  resizePizza();
+}
+
+// Update the current slider value (each time you drag the slider handle)
+size_text.oninput = function() {
+  if (size_text.value >=4 && size_text.value<=25) {
+    pizza_size = size_text.value;
+    size_slider.value = size_text.value;
+    resizePizza();  
+  }
+}
+
+crust_width.oninput = function() {
+  if (crust_width.value >=0 && crust_width.value<=2) {
+    pizza_crust = crust_width.value;
+    crust_slider.value = crust_width.value*10;
+    resizePizza();  
+  }
+}
+
+dollar_text.oninput = function() {
+  if (dollar_slider.value > 0) {
+    pizza_cost = dollar_text.value;
+    dollar_slider.value = dollar_text.value;
+    showStats();
+  }
+}
+
+size_slider.oninput = function() {
+  pizza_size = this.value;
+  size_text.value = this.value;
+  resizePizza();
+} 
+crust_slider.oninput = function() {
+  pizza_crust = this.value/10;
+  crust_width.value = this.value / 10;
+  resizePizza();
+} 
+dollar_slider.oninput = function() {
+  pizza_cost = this.value;
+  dollar_text.value = this.value;
+  showStats();
+} 
+
+
+document.getElementById("save").onclick = function() {
+  document.getElementById("clear").style.display = "inline-block";
+  var table_header = document.getElementById("table_header");
+  table_header.style.display = "flex";
+
+  var new_row = document.createElement("div");
+  new_row.className = "table_row";
+  var c1 = document.createElement("div");
+  var c2 = document.createElement("div");
+  var c3 = document.createElement("div");
+  var c4 = document.createElement("div");
+  var c5 = document.createElement("div");
+
+  var total_inches = document.getElementById("total_inches");
+  var square_inch_price = document.getElementById("square_inch_price");
+  var crustless_price = document.getElementById("crustless_price");
+
+  c1.innerHTML = size_text.value+'"';
+  c2.innerHTML = crust_width.value+'"';
+  c3.innerHTML = total_inches.innerHTML+" in²";
+  c4.innerHTML = square_inch_price.innerHTML;
+  c5.innerHTML = crustless_price.innerHTML;
+
+  new_row.appendChild(c1);
+  new_row.appendChild(c2);
+  new_row.appendChild(c3);
+  new_row.appendChild(c4);
+  new_row.appendChild(c5);
+
+  document.getElementById('table_rows').appendChild(new_row);
+}
+document.getElementById("clear").onclick = function() {
+  document.getElementById("clear").style.display = "none";
+  document.getElementById("table_rows").innerHTML = "";
+}
+
+
+window.onresize = function(event) {
+    console.log(window.width);
+    resizePizza();
+};
+function resizePizza() {
+    var tw = document.getElementById('pizza-container').offsetWidth;
+    var inches = pizza_size;
+    var new_width = tw * inches / 14;
+    document.getElementById('crust').style.width = new_width+"px";
+
+    var cheese_w  = new_width - (2*pizza_crust*tw/14);
+    document.getElementById('cheese').style.width = cheese_w+"px";
+    var margin = (pizza_crust*tw/14); //add thirty because that's the standard margin.
+    document.getElementById('cheese').style.top = margin + 30+"px";
+    document.getElementById('cheese').style.left = margin + 30+"px";
+    document.getElementById('salamis').style.width = cheese_w + 30+"px";
+    document.getElementById('salamis').style.top = margin + 30+"px";
+    document.getElementById('salamis').style.left = margin + 30+"px";
+    
+    var salami_width = document.getElementById("salami").offsetWidth || 44;
+    var salamis = document.getElementById('salamis');
+    salamis.innerHTML = "";
+    salamis.style.width = new_width+"px";
+    for (var i = 0; i < 30; i++) {
+      var e = document.createElement("img");
+      if (i == 0) e.id = "salami";
+      e.setAttribute("src", "static/img/salami.png")
+      e.className = "salami";
+      salamis.appendChild(e);
+      
+      console.log(salami_width)
+      var w = cheese_w-salami_width;
+
+      //var x = Math.random() * w;
+      //var y = Math.random() * w;
+
+      var m = Math.random() * w/2;
+      var theta = Math.random() * 3.1415*2;
+
+      var x = (Math.sin(theta) * m)+(w/2);
+      var y = (Math.cos(theta) * m)+(w/2);
+
+      e.style.left = x+"px";
+      e.style.top = y+"px";
+    }
+    showStats();
+}
+
+function format_money(v) {
+  return parseFloat(v).toFixed(2);
+}
+
+function showStats(){
+  var total_inches = document.getElementById("total_inches");
+  var square_inch_price = document.getElementById("square_inch_price");
+  var crust_ratio = document.getElementById("crust_ratio");
+  var crustless_total = document.getElementById("crustless_total");
+  var crustless_price = document.getElementById("crustless_price");
+  var d = pizza_size;
+  var crust = pizza_crust;
+  const pi = 3.14159;
+  var tsi = (pi * (d/2) * (d/2));
+  var clt = (pi * ((d-crust)/2) * ((d-crust)/2));
+
+  total_inches.innerHTML = parseInt(tsi+0.5);
+  square_inch_price.innerHTML = "$"+format_money(pizza_cost / tsi);
+  crust_ratio.innerHTML = parseInt(((tsi - clt) / tsi * 100)+0.5) +"%"
+  crustless_total.innerHTML = parseInt(clt+0.5);
+  crustless_price.innerHTML = "$"+format_money(pizza_cost / clt);
+}
+
+resizePizza();
+</script>
+
