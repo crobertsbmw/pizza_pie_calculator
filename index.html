@@ -22,13 +22,13 @@
 
 <style>
   body{
-    margin:30px;
+    margin:20px;
   }
+
  .pizza_img {
-    width:450px;
     position:absolute;
-    top:30px;
-    left:30px;
+    top:40px;
+    left:40px;
     z-index: -1;
  }
 
@@ -44,7 +44,7 @@
   transition: opacity .2s;
 }
 .page-stuff {
-    width:50%;
+    width:55%;
 }
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
@@ -71,19 +71,20 @@
     padding:10px;
 }
 #pizza-container {
-    max-width:500px;
+    max-width:400px;
     width:40%;
 }
 #ruler {
-    margin-top:400px;
+    margin-top:300px;
+    margin-left:20px;
     width:100%;
 }
 .salami{
   position:absolute;
 }
 .text_input {
-  padding-bottom:10px; 
-  padding-top:10px; 
+  padding-bottom:7px; 
+  padding-top:7px; 
   padding-left:4px;
   padding-right:4px;
   font-size:22px; 
@@ -133,7 +134,7 @@
 </style>
 </head>
     <body>
-      <h1>Pizza Pie Calculator</h1>
+      <h1 style="text-align:center;">Pizza Pie Calculator</h1>
         <div class="page-1">
             <div id="pizza-container">
                 <img src="static/img/ruler.png" id="ruler"/>
@@ -146,13 +147,13 @@
 
             <div class="page-stuff">
                 <div id="slide-container">
-                    <h3>Pizza Size: <input type="text" id="size" class="text_input" value="14"/> inches</h3>
+                    <h4>Pizza Size: <input type="text" id="size" class="text_input" value="14"/> inches</h4>
                     <input type="range" min="4" max="25" value="14" class="slider" id="size_slider">
 
-                    <h3>Crust Width: <input type="text" id="crust_width" class="text_input" value="0.5"/> inches</h3>
+                    <h4>Crust Width: <input type="text" id="crust_width" class="text_input" value="0.5"/> inches</h4>
                     <input type="range" min="1" max="20" value="5" class="slider" id="crust_slider">
 
-                    <h3>Cost: &nbsp;$<input type="text" id="dollars" class="text_input" value="10.99"/></h3>
+                    <h4>Cost: &nbsp;$<input type="text" id="dollars" class="text_input" value="10.99"/></h4>
                     <input type="range" min="1" max="50" value="10" class="slider" id="dollars_slider">
 
                     <button class="uk-button uk-button-primary" type="button" id="save">SAVE</button>
@@ -344,6 +345,7 @@ window.onresize = function(event) {
     resizePizza();
 };
 function resizePizza() {
+    const main_margin = 40;
     var tw = document.getElementById('pizza-container').offsetWidth;
     var inches = pizza_size;
     var new_width = tw * inches / 14;
@@ -352,17 +354,17 @@ function resizePizza() {
     var cheese_w  = new_width - (2*pizza_crust*tw/14);
     document.getElementById('cheese').style.width = cheese_w+"px";
     var margin = (pizza_crust*tw/14); //add thirty because that's the standard margin.
-    document.getElementById('cheese').style.top = margin + 30+"px";
-    document.getElementById('cheese').style.left = margin + 30+"px";
-    document.getElementById('salamis').style.width = cheese_w + 30+"px";
-    document.getElementById('salamis').style.top = margin + 30+"px";
-    document.getElementById('salamis').style.left = margin + 30+"px";
+    document.getElementById('cheese').style.top = margin + main_margin+"px";
+    document.getElementById('cheese').style.left = margin + main_margin+"px";
+    document.getElementById('salamis').style.width = cheese_w + main_margin+"px";
+    document.getElementById('salamis').style.top = margin + main_margin+"px";
+    document.getElementById('salamis').style.left = margin + main_margin+"px";
     
     var salami_width = document.getElementById("salami").offsetWidth || 44;
     var salamis = document.getElementById('salamis');
     salamis.innerHTML = "";
     salamis.style.width = new_width+"px";
-    for (var i = 0; i < 30; i++) {
+    for (var i = 0; i < 25; i++) {
       var e = document.createElement("img");
       if (i == 0) e.id = "salami";
       e.setAttribute("src", "static/img/salami.png")
