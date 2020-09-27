@@ -130,6 +130,26 @@
 .chain_cell {
   margin:5px;
 }
+#table_header {
+  display:none;
+}
+.footer {
+  width:80%;
+  padding-bottom:30px;
+  padding-top:70px;
+}
+
+@media only screen and (max-width: 500px) {
+  .page-1 {
+    flex-direction: column;
+  }
+  .page-stuff {
+    width:100%;
+  }
+  #pizza-container {
+    width:85%;
+  }
+}
 
 </style>
 </head>
@@ -196,7 +216,7 @@
         <div id="popular_chains">
             <div class="uk-alert-warning" uk-alert style="font-size:12px;">
               <a class="uk-alert-close" uk-close></a>
-              Note : All prices listed are for menu priced two-topping pizzas, with no specials or promos applied. Please don't ever pay $17 for a large pizza! There are always multiple <i>specials</i> happening at all the major chains to bring the price down to at least 50% of regular prices. Little Caesars is an exception in that their promo became the regular menu price.
+              Note : All prices listed are for menu priced two-topping pizzas, with no specials or promos applied. Please don't ever pay $17 for a large pizza! There are always multiple <i>specials</i> happening at all the major chains to bring the price down to at least 50% of regular prices. Little Caesars is an exception in that their ($5 hot 'n ready) promo became the regular menu price. Also, the crust widths are not exact. If you have data on this, please let me know.
             </div>
           <div style="display: flex; justify-content:left; flex-wrap:wrap; align-items: center;">
             <div class="chain_cell"><img src="static/img/dominos_logo_2.png" id="dominos" class="logo_header"/></div>
@@ -223,22 +243,29 @@
 
           <div style="display: flex; justify-content:left; flex-wrap:wrap; align-items: center; margin-top: 20px">
             <div class="chain_cell"><img src="static/img/little_ceasars_logo.png" id="little_ceasars" class="logo_header"/></div>
-            <div class="chain_cell"><button class="uk-button uk-button-default" type="button" onclick="prefill(14, 0.9, 8.9)">LARGE</button></div>
+            <div class="chain_cell"><button class="uk-button uk-button-default" type="button" onclick="prefill(14, 0.9, 8.9)">LARGE (2-topping)</button></div>
           </div>
 
         </div>
+      <div style="display:flex; justify-content: center;">
+      <div class="footer">
+        <p>I thought it would be so cool to have a link to buy me a pizza, and link out to Papa Johns and be able to literally buy a pizza that gets delivered to me, but I don't see an easy way to do it without exposing my house address, which I'd rather not post so plainly. So, rather than buy me a pizza, why don't you donate $10 to the Arbor Foundation through <a href="https://teamtrees.org/">#TeamTrees</a>.</p>
+
+        <h5 style="text-align: center">Fork this on <a href="https://github.com/crobertsbmw/pizza_pie_calculator">GitHub</a>.</h5>
+      </div>
+    </div>
     </body>
 </html>
 
 <script>
 
-var pizza_crust = 1;
+var pizza_crust = 1; //default values.
 var pizza_size = 14;
 var pizza_cost = 12;
 
 var size_slider = document.getElementById("size_slider");
 var size_text = document.getElementById("size");
-size_text.value = size_slider.value; // Display the default slider value
+size_text.value = size_slider.value;
 
 var crust_width = document.getElementById("crust_width");
 var crust_slider = document.getElementById("crust_slider");
@@ -335,6 +362,7 @@ document.getElementById("save").onclick = function() {
   document.getElementById('table_rows').appendChild(new_row);
 }
 document.getElementById("clear").onclick = function() {
+  document.getElementById("table_header").style.display = "none";
   document.getElementById("clear").style.display = "none";
   document.getElementById("table_rows").innerHTML = "";
 }
@@ -387,6 +415,9 @@ function resizePizza() {
       e.style.top = y+"px";
     }
     showStats();
+
+    //resize ruler
+
 }
 
 function format_money(v) {
